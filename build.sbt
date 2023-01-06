@@ -1,5 +1,12 @@
 import Dependencies._
 
+lazy val dockerPublishSettings = List(
+  dockerExposedPorts ++= Seq(9000, 9001),
+  git.useGitDescribe := true,
+  Docker / packageName := "bifrost-daml-broker",
+  dockerBaseImage := "adoptopenjdk/openjdk11:jdk-11.0.8_10-ubuntu",
+  dockerUpdateLatest := true
+)
 
 lazy val publishSettings = List(
   organization := "co.topl",
@@ -27,6 +34,7 @@ lazy val publishSettings = List(
 lazy val root = (project in file("."))
   .configs(IntegrationTest)
   .settings(Defaults.itSettings)
+  .settings(dockerPublishSettings)
   .settings(publishSettings)
   .settings(
     name := "bifrost-daml-broker",
@@ -36,4 +44,4 @@ lazy val root = (project in file("."))
     libraryDependencies += bramblCommon,
     libraryDependencies += toplDaml,
     libraryDependencies += slf4j
-  )
+  ).enablePlugins(DockerPlugin, JavaAppPackaging)
