@@ -1,5 +1,6 @@
-# scala-daml-broker-app
-This repository contains a simple application that uses the [daml-dopl-lib](https://github.com/Topl/daml-bifrost-module). The broker application captures the contracts in the DAML participant node. It then performs the necessary operations on the Bifrost node. The results can be captured again by the client application.
+# bifrost-daml-broker
+
+This repository contains a simple application that uses the [daml-bifrost-module](https://github.com/Topl/daml-bifrost-module). The broker application captures the contracts in the DAML participant node. It then performs the necessary operations on the Bifrost node. The results can be captured again by the client application.
 
 #### Prerequisites
  
@@ -15,7 +16,7 @@ This repository contains a simple application that uses the [daml-dopl-lib](http
 The application is meant to run in the background. The command line command looks like this:
 
 ```
-$ scala-daml-broker-app <HOST> <PORT> <KEYFILENAME> <KEYFILEPASSWORD>
+$ bifrost-daml-broker <HOST> <PORT> <KEYFILENAME> <KEYFILEPASSWORD>
 ```
 
 The parameters refer to:
