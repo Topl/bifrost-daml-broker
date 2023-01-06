@@ -1,6 +1,6 @@
 # bifrost-daml-broker
 
-This repository contains a simple application that uses the [daml-bifrost-module](https://github.com/Topl/daml-bifrost-module). The broker application captures the contracts in the DAML participant node. It then performs the necessary operations on the Bifrost node. The results can be captured again by the client application.
+The broker application captures the contracts in the DAML participant node. It then performs the necessary operations on the Bifrost node. The results can be captured again by the client application.
 
 #### Prerequisites
  
