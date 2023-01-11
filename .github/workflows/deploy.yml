@@ -27,7 +27,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}github.event.release
+          password: ${{ secrets.GITHUB_TOKEN }}
       - if: github.event.release
         name: Push images to registries
         run: sbt "Docker / publish"
