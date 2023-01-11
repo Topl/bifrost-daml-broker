@@ -16,6 +16,23 @@ jobs:
         name: Setup Scala
         uses: olafurpg/setup-scala@v13
       - if: github.event.release
+        name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - if: github.event.release
+        name: Log in to the Github Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}github.event.release
+        name: Push images to registries
+        run: sbt "Docker / publish"
+        env:
+          DOCKER_PUBLISH: true
+      - if: github.event.release
         name: Deploy (release only)
         run: sbt ci-release
         env:

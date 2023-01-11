@@ -2,10 +2,15 @@ import Dependencies._
 
 
 lazy val dockerPublishSettings = List(
-   dockerExposedPorts ++= Seq(9000, 9001),
-  Docker / dynverSeparator := "-",
+  dockerExposedPorts ++= Seq(9000, 9001),
   Docker / version := dynverGitDescribeOutput.value.mkVersion(versionFmt, fallbackVersion(dynverCurrentDate.value)),
   Docker / packageName := "bifrost-daml-broker",
+  dockerAliases := dockerAliases.value.flatMap { alias =>
+    Seq(
+      alias.withRegistryHost(Some("docker.io/toplprotocol")),
+      alias.withRegistryHost(Some("ghcr.io/topl"))
+    )
+  },
   dockerBaseImage := "adoptopenjdk/openjdk11:jdk-11.0.16.1_1-ubuntu",
   dockerUpdateLatest := true
 )
@@ -18,6 +23,7 @@ def versionFmt(out: sbtdynver.GitDescribeOutput): String = {
 
 
 def fallbackVersion(d: java.util.Date): String = s"HEAD-${sbtdynver.DynVer timestamp d}"
+
 
 
 lazy val mavenPublishSettings = List(
