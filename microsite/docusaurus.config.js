@@ -88,6 +88,10 @@ const config = {
                 label: 'Getting Started',
                 to: '/docs/intro',
               },
+              {
+                to: 'docs/category/reference',
+                label: 'Reference',
+              },
             ],
           },
           {
