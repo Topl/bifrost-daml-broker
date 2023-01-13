@@ -6,7 +6,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Bifrost DAML Broker',
+  title: 'Topl DAML Broker',
   tagline: 'Integrate your DAML application with Bifrost',
   url: 'https://topl.github.io/',
   baseUrl: '/bifrost-daml-broker',
