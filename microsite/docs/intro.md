@@ -27,7 +27,7 @@ To launch the broker you need to provide it with a `keyfile.json` file and the p
 
 ### Launch the Prerequirements
 
-You need to launch the daml sandbox from your daml project using the following command:
+You need to launch the DAML sandbox from your DAML project using the following command:
 
 ```bash
 daml start
