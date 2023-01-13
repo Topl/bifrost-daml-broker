@@ -8,7 +8,7 @@ Shows the list of parameters available to start the broker.
 
 ## Usage
 
-The following parameters are needed to launc the broker.
+The following parameters are needed to launch the broker.
 
 ### Example
 
