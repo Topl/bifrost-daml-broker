@@ -6,7 +6,7 @@ sidebar_position: 1
 
 We illustrate the architecture of a DAML application that integrates with the Bifrost node.
 
-![Architecture Diagram](img/damlIntegration.jpg)
+![Architecture Diagram](img/damlIntegration.png)
 
 ## Overview
 
