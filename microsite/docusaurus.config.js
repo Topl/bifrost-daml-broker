@@ -53,9 +53,9 @@ const config = {
         disableSwitch: true,
       },
       navbar: {
-        title: 'Bifrost DAML Broker',
+        title: 'Topl DAML Broker',
         logo: {
-          alt: 'Bifrost DAML Broker Logo',
+          alt: 'Topl DAML Broker Logo',
           src: 'img/logo_topl.svg',
         },
         items: [
