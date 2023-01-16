@@ -20,7 +20,7 @@ The react-ui is the UI of the application. The application provides this UI, whi
 
 ### json-api
 
-The JSON API is a component provided by DAML. It is basically an executable JAR file that acts as an intermediary between a JSON API and the more complete Ledger gRPC API of the DAML Node. Applications can expose it through an nginx reverse proxy.
+The JSON API is a component provided by DAML. The JSON API is basically an executable JAR file that acts as an intermediary between a JSON API and the more complete Ledger gRPC API of the DAML Node. Applications can expose it through an nginx reverse proxy.
 
 ### daml-participant-node
 
