@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkmicrosite=self.webpackChunkmicrosite||[]).push([[891],{5406:a=>{a.exports=JSON.parse('{"label":"hola","permalink":"/bifrost-daml-broker/blog/tags/hola","allTagsPath":"/bifrost-daml-broker/blog/tags","count":1}')}}]);
