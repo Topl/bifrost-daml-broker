@@ -24,7 +24,11 @@ def versionFmt(out: sbtdynver.GitDescribeOutput): String = {
 
 def fallbackVersion(d: java.util.Date): String = s"HEAD-${sbtdynver.DynVer timestamp d}"
 
+scalacOptions += "-Ywarn-unused"
 
+semanticdbEnabled := true
+
+semanticdbVersion := scalafixSemanticdb.revision
 
 lazy val mavenPublishSettings = List(
   organization := "co.topl",
@@ -56,9 +60,10 @@ lazy val root = (project in file("."))
   .settings(
     name := "bifrost-daml-broker",
     scalaVersion := "2.13.8",
-    libraryDependencies += scalaTest % Test,
     libraryDependencies += brambl,
     libraryDependencies += bramblCommon,
     libraryDependencies += toplDaml,
-    libraryDependencies += slf4j
+    libraryDependencies += slf4j,
+    libraryDependencies += scopt,
+    libraryDependencies += munit
   ).enablePlugins(DockerPlugin, JavaAppPackaging)
