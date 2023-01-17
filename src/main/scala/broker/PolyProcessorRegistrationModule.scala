@@ -23,8 +23,8 @@ trait PolyProcessorRegistrationModule {
           damlAppContext,
           toplContext,
           3000,
-          (x, y) => true,
-          t => true
+          (_, _) => true,
+          _ => true
         )
       )
       _ <- IO(transactions.forEach(transferProcessor.processTransaction))
@@ -63,8 +63,8 @@ trait PolyProcessorRegistrationModule {
           toplContext,
           3000,
           1,
-          (x, y) => true,
-          t => true
+          (_, _) => true,
+          _ => true
         )
       )
       _ <- IO(transactions.forEach(transferProcessor.processTransaction))

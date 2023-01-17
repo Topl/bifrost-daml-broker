@@ -21,8 +21,8 @@ trait AssetTransferProcessorRegistrationModule {
           damlAppContext,
           toplContext,
           3000,
-          (x, y) => true,
-          t => true
+          (_, _) => true,
+          _ => true
         )
       )
       _ <- IO(transactions.forEach(transferProcessor.processTransaction))
@@ -45,8 +45,8 @@ trait AssetTransferProcessorRegistrationModule {
             i = i + 1
             i.toString()
           },
-          (x, y) => true,
-          t => true
+          (_, _) => true,
+          _ => true
         )
       )
       _ <- IO(transactions.forEach(transferProcessor.processTransaction))

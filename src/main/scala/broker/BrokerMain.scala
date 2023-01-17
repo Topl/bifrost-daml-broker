@@ -74,7 +74,7 @@ object BrokerMain
           case Validated.Valid(validatedInput) =>
             runWithParams(validatedInput)
           case Validated.Invalid(errors) =>
-            IO.println("Invalid parameters\n" + errors.toList.mkString("\n")) *>
+            IO.println("The broker was launched with Invalid parameters:\n" + errors.toList.map(s => " - " + s).mkString("\n")) *>
               IO.pure(ExitCode.Error)
         }
       case None =>
