@@ -17,7 +17,7 @@ trait ParameterProcessorModule {
     import builder._
     OParser.sequence(
       programName("bifrost-daml-broker"),
-      head("bifrost-daml-broker", "0.1"),
+      head("bifrost-daml-broker", "0.2"),
       opt[String]('n', "topl-network")
         .action((x, c) => c.copy(networkUri = x))
         .text(
@@ -25,19 +25,19 @@ trait ParameterProcessorModule {
         ),
       opt[String]('u', "topl-uri")
         .action((x, c) => c.copy(networkUri = x))
-        .text("the URI of the Topl network to connect to"),
+        .text("the URI of the Topl network to connect to, for example https://127.0.0.1/"),
       opt[Option[String]]('a', "topl-api-key")
         .action((x, c) => c.copy(someApiKey = x))
         .text("the API key for the Topl network"),
       opt[String]('h', "daml-host")
         .action((x, c) => c.copy(damlHost = x))
-        .text("the host of the ledger"),
+        .text("the host of the ledger, for example localhost"),
       opt[Int]('p', "daml-port")
         .action((x, c) => c.copy(damlPort = x))
-        .text("the port where the ledger is listening"),
+        .text("the port where the ledger is listening, for example 6865"),
       opt[Option[File]]('k', "keyfile")
         .action((x, c) => c.copy(someKeyfile = x))
-        .text("the file that contains the operator key"),
+        .text("the file that contains the operator key, for example keyfile.json"),
       opt[Option[String]]('w', "password")
         .action((x, c) => c.copy(somePassword = x))
         .text("the password for the keyfile")
