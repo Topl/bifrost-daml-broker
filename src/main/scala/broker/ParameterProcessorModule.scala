@@ -19,7 +19,7 @@ trait ParameterProcessorModule {
       programName("bifrost-daml-broker"),
       head("bifrost-daml-broker", "0.2"),
       opt[String]('n', "topl-network")
-        .action((x, c) => c.copy(networkUri = x))
+        .action((x, c) => c.copy(networkType = x))
         .text(
           "the Topl network to connect to, one of: main, valhalla, and private"
         ),
