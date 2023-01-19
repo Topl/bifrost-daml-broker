@@ -1,58 +1,45 @@
 package broker
 
+import java.util.Collections
+
+import akka.actor.ActorSystem
+import cats.data.Validated
+import cats.effect.ExitCode
+import cats.effect.IO
 import cats.effect.IOApp
-import cats.effect.{ExitCode, IO}
-import com.daml.ledger.rxjava.DamlLedgerClient
-import com.daml.ledger.rxjava.UserManagementClient
-import com.daml.ledger.javaapi.data.GetUserRequest
-import akka.http.scaladsl.model.Uri
 import co.topl.daml.DamlAppContext
 import co.topl.daml.ToplContext
-import akka.actor.ActorSystem
-import co.topl.client.Provider
-import co.topl.daml.polys.processors.TransferRequestProcessor
-import com.daml.ledger.javaapi.data.LedgerOffset
 import com.daml.ledger.javaapi.data.FiltersByParty
-import java.util.Collections
+import com.daml.ledger.javaapi.data.GetUserRequest
+import com.daml.ledger.javaapi.data.LedgerOffset
 import com.daml.ledger.javaapi.data.NoFilter
-import io.reactivex.Flowable
-import com.daml.ledger.javaapi.data.Transaction
-import co.topl.daml.polys.processors.SignedTransferProcessor
-import co.topl.daml.polys.processors.UnsignedTransferProcessor
-import co.topl.daml.api.model.topl.transfer.UnsignedTransfer
-import co.topl.daml.assets.processors.AssetMintingRequestProcessor
-import co.topl.daml.assets.processors.SignedMintingRequestProcessor
-import co.topl.daml.assets.processors.UnsignedMintingRequestProcessor
-import co.topl.daml.api.model.topl.asset.UnsignedAssetMinting
-import co.topl.daml.assets.processors.AssetTransferRequestProcessor
-import co.topl.daml.assets.processors.SignedAssetTransferRequestProcessor
+import com.daml.ledger.rxjava.DamlLedgerClient
+import com.daml.ledger.rxjava.UserManagementClient
+import scopt.OParser
 
 object BrokerMain
     extends IOApp
     with PolyProcessorRegistrationModule
     with AssetTransferProcessorRegistrationModule
     with AssetMintingProcessorRegistrationModule
-    with BalanceProcessorModule {
+    with BalanceProcessorModule
+    with ParameterProcessorModule {
 
-  val EXPECTED_ARG_COUNT = 4;
   val OPERATOR_USER = "public";
   val APP_ID = "toplBrokerApp";
 
-  override def run(args: List[String]): IO[ExitCode] =
+
+  def runWithParams(paramConfig: CLIParamConfigValidatedInput) = {
     (for {
-      tuple <- getArgs(args)
-      (host, port, keyfile, password) = tuple
-      client <- createClient(host, port)
+      client <- createClient(paramConfig.damlHost, paramConfig.damlPort)
       _ <- connect(client)
       userManagementClient <- getUserManagementClient(client)
       operatorParty <- getOperatorParty(userManagementClient)
-      _ <- IO.println("The operator party is: " + operatorParty)
-      uri <- IO(Uri("http://127.0.0.1:9085/"))
       damlAppContext <- IO(new DamlAppContext(APP_ID, operatorParty, client))
       toplContext <- IO(
         new ToplContext(
           ActorSystem(),
-          new Provider.PrivateTestNet(uri, "")
+          paramConfig.provider
         )
       )
       transactions <- getTransactions(client, operatorParty)
@@ -60,11 +47,16 @@ object BrokerMain
       implicit val damlAppContextImpl = damlAppContext
       implicit val toplContextImpl = toplContext
       implicit val transactionsImpl = transactions
+
       for {
         _ <- registerTransferProcessor()
         _ <- registerSignedTransferProcessor()
-        _ <- registerUnsignedTransferProcessor(keyfile, password)
-        _ <- registerUnsignedMintingProcessor(keyfile, password)
+        _ <- paramConfig.keyfileAndPassword
+          .map(e => registerUnsignedTransferProcessor(e._1.getPath(), e._2))
+          .getOrElse(IO.unit)
+        _ <- paramConfig.keyfileAndPassword
+          .map(e => registerUnsignedMintingProcessor(e._1.getPath(), e._2))
+          .getOrElse(IO.unit)
         _ <- registerMintingRequestProcessor()
         _ <- registerAssetTransferRequestProcessor()
         _ <- registerSignedMintingRequestProcessor()
@@ -73,6 +65,23 @@ object BrokerMain
         _ <- IO.never[Unit]
       } yield ExitCode.Success
     }).flatten
+  }
+
+  override def run(args: List[String]): IO[ExitCode] = {
+    OParser.parse(parser, args, CLIParamConfigInput()) match {
+      case Some(paramConfig) =>
+        validateParams(paramConfig) match {
+          case Validated.Valid(validatedInput) =>
+            runWithParams(validatedInput)
+          case Validated.Invalid(errors) =>
+            IO.println("The broker was launched with invalid parameters:\n" + errors.toList.map(s => " - " + s).mkString("\n")) *>
+              IO.pure(ExitCode.Error)
+        }
+      case None =>
+        IO.pure(ExitCode.Error)
+    }
+
+  }
 
   def getTransactions(client: DamlLedgerClient, operatorParty: String) = IO(
     client
@@ -103,16 +112,5 @@ object BrokerMain
 
   def connect(client: DamlLedgerClient) = IO(client.connect())
 
-  def getArgs(args: List[String]) = if (args.size != EXPECTED_ARG_COUNT) {
-    for {
-      _ <- IO.print("Usage: HOST PORT KEYFILENAME KEYFILEPASSWORD")
-    } yield throw new IllegalArgumentException
-  } else {
-    val host = args(0)
-    val port = Integer.parseInt(args(1))
-    val keyfile = args(2)
-    val password = args(3)
-    IO.pure((host, port, keyfile, password))
-  }
 
 }

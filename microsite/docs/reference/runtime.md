@@ -4,30 +4,52 @@ sidebar_position: 2
 
 # Command Line Reference
 
-Shows the list of parameters available to start the broker.
+We intruduce the list of parameters available to start the broker.
 
 ## Usage
 
-The following parameters are needed to launch the broker.
+We need the following parameters to launch the broker.
 
 ### Example
 
 ```bash
-bifrost-daml-broker <HOST> <PORT> <KEYFILENAME> <KEYFILEPASSWORD>
+Usage: bifrost-daml-broker [options]
+
+  -n, --topl-network <value>
+                           the Topl network to connect to, one of: main, valhalla, and private
+  -u, --topl-uri <value>   the URI of the Topl network to connect to, for example https://127.0.0.1/
+  -a, --topl-api-key <value>
+                           the API key for the Topl network
+  -h, --daml-host <value>  the host of the ledger, for example localhost
+  -p, --daml-port <value>  the port where the ledger is listening, for example 6865
+  -k, --keyfile <value>    the file that contains the operator key, for example keyfile.json
+  -w, --password <value>   the password for the keyfile
 ```
 
-### HOST
+### -n, --topl-network <value\>
 
-The host where the DAML participant node is hosted, for example, `localhost`.
+The Topl network to connect to, potential values are: main, valhalla, and private.
 
-### PORT
+### -u, --topl-uri <value\>
 
-The port of the host where the DAML partticipant node is hosted, for example `6865`.
+The URI of the Topl network to connect to, for example https://127.0.0.1/.
 
-### KEYFILENAME
+### -a, --topl-api-key <value\>
 
-The filename that contains the key that the broker uses for signing, for example `keyfile.json`.
+The API key for the Topl network.
 
-### KEYFILEPASSWORD
+### -h, --daml-host <value\>
 
-The password for the key file used for signing, for example `test`.
+The host of the ledger, for example localhost.
+
+### -p, --daml-port <value\>
+
+The port where the ledger is listening, for example 6865.
+
+### -k, --keyfile <value\>
+
+The file that contains the operator key, for example keyfile.json. This parameter is optional. When we do not include this parameter the broker will not sign transactions as operator.
+
+### -w, --password <value\>
+
+The password for the key file. This is only required when a key file is present.

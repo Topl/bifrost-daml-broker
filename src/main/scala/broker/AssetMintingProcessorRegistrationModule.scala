@@ -23,8 +23,8 @@ trait AssetMintingProcessorRegistrationModule {
           damlAppContext,
           toplContext,
           3000,
-          (x, y) => true,
-          t => true
+          (_, _) => true,
+          _ => true
         )
       )
       _ <- IO(transactions.forEach(transferProcessor.processTransaction))
@@ -47,8 +47,8 @@ trait AssetMintingProcessorRegistrationModule {
             i = i + 1
             i.toString()
           },
-          (x, y) => true,
-          t => true
+          (_, _) => true,
+          _ => true
         )
       )
       _ <- IO(transactions.forEach(transferProcessor.processTransaction))
@@ -70,8 +70,8 @@ trait AssetMintingProcessorRegistrationModule {
           toplContext,
           keyfile,
           password,
-          (x: UnsignedAssetMinting, y: UnsignedAssetMinting.ContractId) => true,
-          (t: Throwable) => true
+          (_: UnsignedAssetMinting, _: UnsignedAssetMinting.ContractId) => true,
+          (_: Throwable) => true
         )
       )
       _ <- IO(transactions.forEach(transferProcessor.processTransaction))

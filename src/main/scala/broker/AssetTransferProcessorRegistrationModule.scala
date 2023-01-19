@@ -1,13 +1,12 @@
 package broker
 
-import io.reactivex.Flowable
+import cats.effect.IO
 import co.topl.daml.DamlAppContext
 import co.topl.daml.ToplContext
-import com.daml.ledger.javaapi.data.Transaction
-import cats.effect.IO
-import co.topl.daml.assets.processors.AssetTransferRequestProcessor
-import co.topl.daml.assets.processors.SignedAssetTransferRequestProcessor
 import co.topl.daml.assets.processors.AssetTransferRequestEd25519Processor
+import co.topl.daml.assets.processors.SignedAssetTransferRequestProcessor
+import com.daml.ledger.javaapi.data.Transaction
+import io.reactivex.Flowable
 
 trait AssetTransferProcessorRegistrationModule {
 
@@ -22,8 +21,8 @@ trait AssetTransferProcessorRegistrationModule {
           damlAppContext,
           toplContext,
           3000,
-          (x, y) => true,
-          t => true
+          (_, _) => true,
+          _ => true
         )
       )
       _ <- IO(transactions.forEach(transferProcessor.processTransaction))
@@ -46,8 +45,8 @@ trait AssetTransferProcessorRegistrationModule {
             i = i + 1
             i.toString()
           },
-          (x, y) => true,
-          t => true
+          (_, _) => true,
+          _ => true
         )
       )
       _ <- IO(transactions.forEach(transferProcessor.processTransaction))

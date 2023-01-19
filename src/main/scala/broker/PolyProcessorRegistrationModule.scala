@@ -1,13 +1,13 @@
 package broker
 
-import io.reactivex.Flowable
+import cats.effect.IO
 import co.topl.daml.DamlAppContext
 import co.topl.daml.ToplContext
-import com.daml.ledger.javaapi.data.Transaction
-import cats.effect.IO
+import co.topl.daml.polys.processors.SignedTransferProcessor
 import co.topl.daml.polys.processors.TransferRequestProcessor
 import co.topl.daml.polys.processors.UnsignedTransferProcessor
-import co.topl.daml.polys.processors.SignedTransferProcessor
+import com.daml.ledger.javaapi.data.Transaction
+import io.reactivex.Flowable
 
 trait PolyProcessorRegistrationModule {
 
@@ -23,8 +23,8 @@ trait PolyProcessorRegistrationModule {
           damlAppContext,
           toplContext,
           3000,
-          (x, y) => true,
-          t => true
+          (_, _) => true,
+          _ => true
         )
       )
       _ <- IO(transactions.forEach(transferProcessor.processTransaction))
@@ -63,8 +63,8 @@ trait PolyProcessorRegistrationModule {
           toplContext,
           3000,
           1,
-          (x, y) => true,
-          t => true
+          (_, _) => true,
+          _ => true
         )
       )
       _ <- IO(transactions.forEach(transferProcessor.processTransaction))
