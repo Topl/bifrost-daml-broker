@@ -10,6 +10,9 @@ case class CLIParamConfigInput(
     someApiKey: Option[String] = None,
     damlHost: String = "",
     damlPort: Int = 0,
+    damlSecurityEnabled: Boolean = false,
+    damlAccessToken: Option[String] = None,
+    damlOperatorParty: String = "",
     someKeyfile: Option[File] = None,
     somePassword: Option[String] = None
 )
@@ -18,5 +21,8 @@ case class CLIParamConfigValidatedInput(
     provider: Provider,
     damlHost: String,
     damlPort: Int,
+    damlSecurityEnabled: Boolean,
+    damlAccessToken: Option[String],
+    damlOperatorParty: String,
     keyfileAndPassword: Option[(File, String)]
 )
