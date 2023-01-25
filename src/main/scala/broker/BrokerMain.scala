@@ -24,7 +24,7 @@ object BrokerMain
     with BalanceProcessorModule
     with ParameterProcessorModule {
 
-  val APP_ID = "toplBrokerApp";
+  val APP_ID = "damlhub";
 
   def runWithParams(paramConfig: CLIParamConfigValidatedInput) = {
     (for {
