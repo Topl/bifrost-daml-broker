@@ -13,6 +13,7 @@ case class CLIParamConfigInput(
     damlSecurityEnabled: Boolean = false,
     damlAccessToken: Option[String] = None,
     damlOperatorParty: String = "",
+    damlApplicationId: Option[String] = None,
     someKeyfile: Option[File] = None,
     somePassword: Option[String] = None
 )
@@ -24,5 +25,6 @@ case class CLIParamConfigValidatedInput(
     damlSecurityEnabled: Boolean,
     damlAccessToken: Option[String],
     damlOperatorParty: String,
+    damlApplicationId: String,
     keyfileAndPassword: Option[(File, String)]
 )

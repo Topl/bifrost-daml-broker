@@ -24,8 +24,6 @@ object BrokerMain
     with BalanceProcessorModule
     with ParameterProcessorModule {
 
-  val APP_ID = "damlhub";
-
   def runWithParams(paramConfig: CLIParamConfigValidatedInput) = {
     (for {
       client <- createClient(
@@ -36,7 +34,7 @@ object BrokerMain
       )
       _ <- connect(client)
       operatorParty <- IO(paramConfig.damlOperatorParty)
-      damlAppContext <- IO(new DamlAppContext(APP_ID, operatorParty, client))
+      damlAppContext <- IO(new DamlAppContext(paramConfig.damlApplicationId, operatorParty, client))
       toplContext <- IO(
         new ToplContext(
           ActorSystem(),
