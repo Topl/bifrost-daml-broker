@@ -13,6 +13,7 @@ We need the following parameters to launch the broker.
 ### Example
 
 ```bash
+bifrost-daml-broker 0.2
 Usage: bifrost-daml-broker [options]
 
   -n, --topl-network <value>
@@ -22,6 +23,14 @@ Usage: bifrost-daml-broker [options]
                            the API key for the Topl network
   -h, --daml-host <value>  the host of the ledger, for example localhost
   -p, --daml-port <value>  the port where the ledger is listening, for example 6865
+  -s, --daml-security-enabled <value>
+                           whether to use TLS for the connection to the ledger
+  -t, --daml-access-token <value>
+                           the access token for the ledger
+  -t, --daml-application-id <value>
+                           the application id for the ledger, for DAML Hub hosted application the right value is 'damlhub', which is the default value when omitted
+  -o, --daml-operator-party <value>
+                           the party that will be used to submit transactions to the ledger
   -k, --keyfile <value>    the file that contains the operator key, for example keyfile.json
   -w, --password <value>   the password for the keyfile
 ```
@@ -45,6 +54,23 @@ The host of the ledger, for example localhost.
 ### -p, --daml-port <value\>
 
 The port where the ledger is listening, for example 6865.
+
+
+### -s, --daml-security-enabled <value\>
+
+Whether to use TLS for the connection to the ledger. Possible values are `true` and `false`.
+
+### -t, --daml-access-token <value\>
+
+When the ledger is secured, this is the access token to access the Ledger API.
+
+### -t, --daml-application-id <value\>
+
+The application id for the ledger, for DAML Hub hosted application the right value is 'damlhub', which is the default value when this parameter is omitted.
+
+### -o, --daml-operator-party <value\>
+
+The party that will be used to submit and read transactions from the ledger.
 
 ### -k, --keyfile <value\>
 
