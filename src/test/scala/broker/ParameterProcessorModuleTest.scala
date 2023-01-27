@@ -14,6 +14,7 @@ class ParameterProcessorModuleTest
       someApiKey = Some("some-api-key"),
       damlHost = "localhost",
       damlPort = 6865,
+      damlOperatorParty = "party::abcdefg",
       someKeyfile = None,
       somePassword = None
     )
@@ -29,6 +30,7 @@ class ParameterProcessorModuleTest
       someApiKey = Some("some-api-key"),
       damlHost = "localhost",
       damlPort = 6865,
+      damlOperatorParty = "party::abcdefg",
       someKeyfile = None,
       somePassword = None
     )
@@ -48,6 +50,7 @@ class ParameterProcessorModuleTest
       someApiKey = Some("some-api-key"),
       damlHost = "localhost",
       damlPort = 6865,
+      damlOperatorParty = "party::abcdefg",
       someKeyfile = None,
       somePassword = None
     )
@@ -68,6 +71,7 @@ class ParameterProcessorModuleTest
       someApiKey = Some("some-api-key"),
       damlHost = "this is an invalid host",
       damlPort = 6865,
+      damlOperatorParty = "party::abcdefg",
       someKeyfile = None,
       somePassword = None
     )
@@ -88,6 +92,7 @@ class ParameterProcessorModuleTest
       someApiKey = Some("some-api-key"),
       damlHost = "localhost",
       damlPort = -1,
+      damlOperatorParty = "party::abcdefg",
       someKeyfile = None,
       somePassword = None
     )
@@ -108,6 +113,7 @@ class ParameterProcessorModuleTest
       someApiKey = Some("some-api-key"),
       damlHost = "localhost",
       damlPort = 6865,
+      damlOperatorParty = "party::abcdefg",
       someKeyfile = Some(new File("some-keyfile.json")),
       somePassword = None
     )
@@ -128,6 +134,7 @@ class ParameterProcessorModuleTest
       someApiKey = Some("some-api-key"),
       damlHost = "localhost",
       damlPort = 6865,
+      damlOperatorParty = "party::abcdefg",
       someKeyfile = None,
       somePassword = Some("some-password")
     )
@@ -140,5 +147,28 @@ class ParameterProcessorModuleTest
       List("No keyfile provided")
     )
   }
+  
+  test("Invalid party") {
+    val input = CLIParamConfigInput(
+      networkType = "main",
+      networkUri = "https://api.topl.co",
+      someApiKey = Some("some-api-key"),
+      damlHost = "localhost",
+      damlPort = 6865,
+      damlOperatorParty = "",
+      someKeyfile = None,
+      somePassword = None
+    )
+
+    val validatedInput = validateParams(input)
+
+    assertEquals(validatedInput.isInvalid, true)
+    assertEquals(
+      validatedInput.fold(_.toList, _ => Nil),
+      List("No operator party provided")
+    )
+  }
+
+
 
 }

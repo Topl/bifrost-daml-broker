@@ -67,6 +67,12 @@ const config = {
           },
           {
             type: 'doc',
+            docId: 'damlhub',
+            position: 'left',
+            label: 'Using with DAMLHub',
+          },
+          {
+            type: 'doc',
             docId: '/category/reference',
             position: 'left',
             label: 'Reference',

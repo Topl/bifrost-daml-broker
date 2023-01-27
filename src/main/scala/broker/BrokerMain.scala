@@ -10,11 +10,10 @@ import cats.effect.IOApp
 import co.topl.daml.DamlAppContext
 import co.topl.daml.ToplContext
 import com.daml.ledger.javaapi.data.FiltersByParty
-import com.daml.ledger.javaapi.data.GetUserRequest
 import com.daml.ledger.javaapi.data.LedgerOffset
 import com.daml.ledger.javaapi.data.NoFilter
 import com.daml.ledger.rxjava.DamlLedgerClient
-import com.daml.ledger.rxjava.UserManagementClient
+import io.grpc.netty.GrpcSslContexts
 import scopt.OParser
 
 object BrokerMain
@@ -25,17 +24,17 @@ object BrokerMain
     with BalanceProcessorModule
     with ParameterProcessorModule {
 
-  val OPERATOR_USER = "public";
-  val APP_ID = "toplBrokerApp";
-
-
   def runWithParams(paramConfig: CLIParamConfigValidatedInput) = {
     (for {
-      client <- createClient(paramConfig.damlHost, paramConfig.damlPort)
+      client <- createClient(
+        paramConfig.damlHost,
+        paramConfig.damlPort,
+        paramConfig.damlSecurityEnabled,
+        paramConfig.damlAccessToken
+      )
       _ <- connect(client)
-      userManagementClient <- getUserManagementClient(client)
-      operatorParty <- getOperatorParty(userManagementClient)
-      damlAppContext <- IO(new DamlAppContext(APP_ID, operatorParty, client))
+      operatorParty <- IO(paramConfig.damlOperatorParty)
+      damlAppContext <- IO(new DamlAppContext(paramConfig.damlApplicationId, operatorParty, client))
       toplContext <- IO(
         new ToplContext(
           ActorSystem(),
@@ -74,7 +73,11 @@ object BrokerMain
           case Validated.Valid(validatedInput) =>
             runWithParams(validatedInput)
           case Validated.Invalid(errors) =>
-            IO.println("The broker was launched with invalid parameters:\n" + errors.toList.map(s => " - " + s).mkString("\n")) *>
+            IO.println(
+              "The broker was launched with invalid parameters:\n" + errors.toList
+                .map(s => " - " + s)
+                .mkString("\n")
+            ) *>
               IO.pure(ExitCode.Error)
         }
       case None =>
@@ -95,22 +98,28 @@ object BrokerMain
       )
   )
 
-  def getOperatorParty(userManagementClient: UserManagementClient) = for {
-    getUserResponse <- IO.blocking(
-      userManagementClient
-        .getUser(new GetUserRequest(OPERATOR_USER))
-        .blockingGet()
-    )
-  } yield getUserResponse.getUser().getPrimaryParty().get()
+  def createClient(
+      host: String,
+      port: Int,
+      damlSecurityEnabled: Boolean,
+      damlAccessToken: Option[String]
+  ) = IO {
 
-  def getUserManagementClient(client: DamlLedgerClient) =
-    IO(client.getUserManagementClient())
+    val enableSecurity: DamlLedgerClient.Builder => DamlLedgerClient.Builder =
+      (if (damlSecurityEnabled)
+         _.withSslContext(GrpcSslContexts.forClient().build())
+       else identity _)
+    val enableAccessToken
+        : DamlLedgerClient.Builder => DamlLedgerClient.Builder =
+      damlAccessToken
+        .map(x => (y: DamlLedgerClient.Builder) => y.withAccessToken(x))
+        .getOrElse(identity _)
 
-  def createClient(host: String, port: Int) = IO(
-    DamlLedgerClient.newBuilder(host, port).build()
-  )
+    enableSecurity
+      .compose(enableAccessToken)(DamlLedgerClient.newBuilder(host, port))
+      .build()
+  }
 
   def connect(client: DamlLedgerClient) = IO(client.connect())
-
 
 }

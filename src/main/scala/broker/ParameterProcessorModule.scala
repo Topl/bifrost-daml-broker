@@ -38,6 +38,18 @@ trait ParameterProcessorModule {
       opt[Option[File]]('k', "keyfile")
         .action((x, c) => c.copy(someKeyfile = x))
         .text("the file that contains the operator key, for example keyfile.json"),
+      opt[Boolean]('s', "daml-security-enabled")
+        .action((x, c) => c.copy(damlSecurityEnabled = x))
+        .text("whether to use TLS for the connection to the ledger"),	
+      opt[Option[String]]('t', "daml-access-token")
+        .action((x, c) => c.copy(damlAccessToken = x))
+        .text("the access token for the ledger"),
+      opt[Option[String]]('t', "daml-application-id")
+        .action((x, c) => c.copy(damlApplicationId = x))
+        .text("the application id for the ledger, for DAML Hub hosted application the right value is 'damlhub', which is the default value when omitted"),
+      opt[String]('o', "daml-operator-party")
+        .action((x, c) => c.copy(damlOperatorParty = x))
+        .text("the party that will be used to submit transactions to the ledger"),
       opt[Option[String]]('w', "password")
         .action((x, c) => c.copy(somePassword = x))
         .text("the password for the keyfile")
@@ -61,15 +73,27 @@ trait ParameterProcessorModule {
       ),
       validateDamlHost(paramConfig),
       validateDamlPort(paramConfig),
+      validateDamlOperatorParty(paramConfig.damlOperatorParty),
       validateFileAndPassword(paramConfig.someKeyfile, paramConfig.somePassword)
-    ).mapN((provider, damlHost, damlPort, someFileAndPassword) =>
+    ).mapN((provider, damlHost, damlPort, damlOperatorParty, someFileAndPassword) =>
       CLIParamConfigValidatedInput(
         provider,
         damlHost,
         damlPort,
+        paramConfig.damlSecurityEnabled,
+        paramConfig.damlAccessToken,
+        damlOperatorParty,
+        paramConfig.damlApplicationId.getOrElse("damlhub"),
         someFileAndPassword
       )
     )
+  }
+
+  def validateDamlOperatorParty(damlOperatorParty: String) = {
+    damlOperatorParty match {
+      case "" => Validated.invalidNel("No operator party provided")
+      case _  => Validated.validNel(damlOperatorParty)
+    }
   }
 
   def validateFileAndPassword(
