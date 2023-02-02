@@ -44,7 +44,7 @@ trait ParameterProcessorModule {
       opt[Option[String]]('t', "daml-access-token")
         .action((x, c) => c.copy(damlAccessToken = x))
         .text("the access token for the ledger"),
-      opt[Option[String]]('t', "daml-application-id")
+      opt[Option[String]]('l', "daml-application-id")
         .action((x, c) => c.copy(damlApplicationId = x))
         .text("the application id for the ledger, for DAML Hub hosted application the right value is 'damlhub', which is the default value when omitted"),
       opt[String]('o', "daml-operator-party")

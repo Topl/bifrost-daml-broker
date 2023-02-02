@@ -27,7 +27,7 @@ Usage: bifrost-daml-broker [options]
                            whether to use TLS for the connection to the ledger
   -t, --daml-access-token <value>
                            the access token for the ledger
-  -t, --daml-application-id <value>
+  -l, --daml-application-id <value>
                            the application id for the ledger, for DAML Hub hosted application the right value is 'damlhub', which is the default value when omitted
   -o, --daml-operator-party <value>
                            the party that will be used to submit transactions to the ledger
