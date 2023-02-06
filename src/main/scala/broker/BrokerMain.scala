@@ -101,7 +101,6 @@ object BrokerMain
         _ <- registerSignedAssetTransferRequestProcessor()
         _ <- registerAssetBalanceProcessor()
         _ <- fromPublisher(transactionsImpl, 1)(IO.asyncForIO).compile.drain
-        // _ <- IO.never[Unit]
       } yield ExitCode.Success
     }).flatten
   }
@@ -118,6 +117,7 @@ object BrokerMain
                 .map(s => " - " + s)
                 .mkString("\n")
             ) *>
+              IO.println(OParser.usage(parser)) *>
               IO.pure(ExitCode.Error)
         }
       case None =>

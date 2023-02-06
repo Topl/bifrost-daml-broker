@@ -13,7 +13,7 @@ We need the following parameters to launch the broker.
 ### Example
 
 ```bash
-bifrost-daml-broker 0.2
+bifrost-daml-broker 2.0.0-beta
 Usage: bifrost-daml-broker [options]
 
   -n, --topl-network <value>
@@ -23,15 +23,17 @@ Usage: bifrost-daml-broker [options]
                            the API key for the Topl network
   -h, --daml-host <value>  the host of the ledger, for example localhost
   -p, --daml-port <value>  the port where the ledger is listening, for example 6865
+  -k, --keyfile <value>    the file that contains the operator key, for example keyfile.json
   -s, --daml-security-enabled <value>
                            whether to use TLS for the connection to the ledger
+  -m, --is-daml-hub <value>
+                           whether we are connecting to daml hub
   -t, --daml-access-token <value>
                            the access token for the ledger
   -l, --daml-application-id <value>
                            the application id for the ledger, for DAML Hub hosted application the right value is 'damlhub', which is the default value when omitted
   -o, --daml-operator-party <value>
                            the party that will be used to submit transactions to the ledger
-  -k, --keyfile <value>    the file that contains the operator key, for example keyfile.json
   -w, --password <value>   the password for the keyfile
 ```
 
@@ -54,6 +56,14 @@ The host of the ledger, for example localhost.
 ### -p, --daml-port <value\>
 
 The port where the ledger is listening, for example 6865.
+
+
+### -m, --is-daml-hub <value\>
+
+Whether we are connecting to Daml hub. When we are connecting to Daml hub, the broker
+will first try to login through the Daml Hub Login API, and then it will use the token obtained
+to connect to the ledger. The Daml credentials obtained from the Daml Hub console are used to
+obtain the access token for the ledger. Possible values are `true` and `false`.
 
 
 ### -s, --daml-security-enabled <value\>
