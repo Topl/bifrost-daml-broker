@@ -41,6 +41,9 @@ trait ParameterProcessorModule {
       opt[Boolean]('s', "daml-security-enabled")
         .action((x, c) => c.copy(damlSecurityEnabled = x))
         .text("whether to use TLS for the connection to the ledger"),	
+      opt[Boolean]('m', "is-daml-hub")
+        .action((x, c) => c.copy(damlHub = x))
+        .text("whether we are connecting to daml hub"),	
       opt[Option[String]]('t', "daml-access-token")
         .action((x, c) => c.copy(damlAccessToken = x))
         .text("the access token for the ledger"),
@@ -80,6 +83,7 @@ trait ParameterProcessorModule {
         provider,
         damlHost,
         damlPort,
+        paramConfig.damlHub,
         paramConfig.damlSecurityEnabled,
         paramConfig.damlAccessToken,
         damlOperatorParty,

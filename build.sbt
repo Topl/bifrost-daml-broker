@@ -65,5 +65,11 @@ lazy val root = (project in file("."))
     libraryDependencies += toplDaml,
     libraryDependencies += slf4j,
     libraryDependencies += scopt,
-    libraryDependencies += munit
+    libraryDependencies += munit,
+    libraryDependencies += fs2Core,
+    libraryDependencies += fs2IO,
+    libraryDependencies += fs2ReactiveStreams,
+    libraryDependencies += http4sEmber,
+    libraryDependencies += http4sCirce,
+    libraryDependencies += http4sCirceGeneric
   ).enablePlugins(DockerPlugin, JavaAppPackaging)
