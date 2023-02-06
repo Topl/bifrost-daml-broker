@@ -1,0 +1,43 @@
+# Default values for helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+name: bifrost-daml-broker
+
+damlEnv: damlhub # possible values: dalmhub, cluster
+
+toplEnv: cluster # possible values: valhalla, cluster
+
+damlDamlHubEnvConfig:
+  ledgerId: k5v0wi04dobocxy3
+  damlPort: "443"
+  damlSecure: "true"
+
+damlClusterEnvConfig:
+  damlHost: canton-and-topl-service
+  damlPort: "5011"
+  damlSecure: "true"
+
+toplValhallaNetworkConfig: 
+  network: valhalla
+  bifrostUrl: https://vertx.topl.services/valhalla/63dbff415ef2c40011c59120
+
+
+toplClusterNetworkConfig: 
+  network: private
+  bifrostUrl: http://canton-and-topl-service:9085
+
+  
+
+image:
+  name: toplprotocol/bifrost-daml-broker
+  tag: 1.0.0.beta-1-1-bf2012ba-20230206-1642
+
+replicaCount: 1
+
+securityContext:
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
