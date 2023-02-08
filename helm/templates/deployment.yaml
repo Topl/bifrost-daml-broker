@@ -4,7 +4,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "bifrost.daml.broker.fullname" . }}
-  namespace: dev
   labels:
     app: {{ include "bifrost.daml.broker.fullname" . }}
 spec:
