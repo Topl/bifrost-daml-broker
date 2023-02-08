@@ -9,7 +9,7 @@ damlEnv: damlhub # possible values: dalmhub, cluster
 toplEnv: cluster # possible values: valhalla, cluster
 
 damlDamlHubEnvConfig:
-  ledgerId: k5v0wi04dobocxy3
+  ledgerId: clb15x06q5iqlqc1
   damlPort: "443"
   damlSecure: "true"
 
