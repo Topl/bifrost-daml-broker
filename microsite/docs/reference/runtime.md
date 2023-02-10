@@ -74,7 +74,7 @@ Whether to use TLS for the connection to the ledger. Possible values are `true` 
 
 When the ledger is secured, this is the access token to access the Ledger API.
 
-### -t, --daml-application-id <value\>
+### -l, --daml-application-id <value\>
 
 The application id for the ledger, for DAML Hub hosted application the right value is 'damlhub', which is the default value when this parameter is omitted.
 
