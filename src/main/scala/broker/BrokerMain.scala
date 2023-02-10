@@ -13,8 +13,18 @@ import com.daml.ledger.javaapi.data.FiltersByParty
 import com.daml.ledger.javaapi.data.LedgerOffset
 import com.daml.ledger.javaapi.data.NoFilter
 import com.daml.ledger.rxjava.DamlLedgerClient
+import fs2.interop.reactivestreams._
+import io.circe.generic.auto._
 import io.grpc.netty.GrpcSslContexts
+import org.http4s.BasicCredentials
+import org.http4s.Headers
+import org.http4s.Method
+import org.http4s.Request
+import org.http4s.Uri
+import org.http4s.circe._
+import org.http4s.headers.Authorization
 import scopt.OParser
+import org.http4s.ember.client.EmberClientBuilder
 
 object BrokerMain
     extends IOApp
@@ -24,17 +34,46 @@ object BrokerMain
     with BalanceProcessorModule
     with ParameterProcessorModule {
 
+  case class LoginResponse(access_token: String, token: String)
+  implicit val loginResponseDecoder = jsonOf[IO, LoginResponse]
+
+  def login2DamlHub(
+      damlHost: String,
+      damlAccessToken: String
+  ): IO[Option[String]] = for {
+    uri <- IO.fromEither(
+      Uri.fromString(s"https://${damlHost}/.hub/v1/sa/login")
+    )
+    req = Request[IO](
+      method = Method.POST,
+      uri = uri
+    ).withHeaders(
+      Headers(
+        Authorization(BasicCredentials(damlAccessToken))
+      )
+    )
+    res <- EmberClientBuilder
+      .default[IO]
+      .build
+      .use(c => c.run(req).use(r => r.as[LoginResponse]))
+  } yield Some(res.access_token)
+
   def runWithParams(paramConfig: CLIParamConfigValidatedInput) = {
     (for {
+      someAccessToken <- if (paramConfig.damlHub) paramConfig.damlAccessToken
+        .map(t => login2DamlHub(paramConfig.damlHost, t))
+        .getOrElse(IO.pure(None)) else IO.pure(paramConfig.damlAccessToken)
       client <- createClient(
         paramConfig.damlHost,
         paramConfig.damlPort,
         paramConfig.damlSecurityEnabled,
-        paramConfig.damlAccessToken
+        someAccessToken
       )
       _ <- connect(client)
       operatorParty <- IO(paramConfig.damlOperatorParty)
-      damlAppContext <- IO(new DamlAppContext(paramConfig.damlApplicationId, operatorParty, client))
+      damlAppContext <- IO(
+        new DamlAppContext(paramConfig.damlApplicationId, operatorParty, client)
+      )
       toplContext <- IO(
         new ToplContext(
           ActorSystem(),
@@ -61,7 +100,7 @@ object BrokerMain
         _ <- registerSignedMintingRequestProcessor()
         _ <- registerSignedAssetTransferRequestProcessor()
         _ <- registerAssetBalanceProcessor()
-        _ <- IO.never[Unit]
+        _ <- fromPublisher(transactionsImpl, 1)(IO.asyncForIO).compile.drain
       } yield ExitCode.Success
     }).flatten
   }
@@ -78,6 +117,7 @@ object BrokerMain
                 .map(s => " - " + s)
                 .mkString("\n")
             ) *>
+              IO.println(OParser.usage(parser)) *>
               IO.pure(ExitCode.Error)
         }
       case None =>
