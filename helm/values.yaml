@@ -6,10 +6,10 @@ name: bifrost-daml-broker
 
 damlEnv: damlhub # possible values: dalmhub, cluster
 
-toplEnv: cluster # possible values: valhalla, cluster
+toplEnv: valhalla # possible values: valhalla, cluster
 
 damlDamlHubEnvConfig:
-  ledgerId: clb15x06q5iqlqc1
+  ledgerId: fmkbkd98k97tv24g
   damlPort: "443"
   damlSecure: "true"
 
@@ -25,13 +25,13 @@ toplValhallaNetworkConfig:
 
 toplClusterNetworkConfig: 
   network: private
-  bifrostUrl: http://canton-and-topl-service:9085
+  bifrostUrl: http://localhost:9085
 
   
 
 image:
   name: toplprotocol/bifrost-daml-broker
-  tag: 1.0.0.beta-1-1-bf2012ba-20230206-1642
+  tag: 1.0.0.beta-2
 
 replicaCount: 1
 
