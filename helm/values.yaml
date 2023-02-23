@@ -9,7 +9,7 @@ damlEnv: damlhub # possible values: dalmhub, cluster
 toplEnv: valhalla # possible values: valhalla, cluster
 
 damlDamlHubEnvConfig:
-  ledgerId: fmkbkd98k97tv24g
+  ledgerId: w85m150i4gbsvl9m
   damlPort: "443"
   damlSecure: "true"
 
@@ -20,7 +20,7 @@ damlClusterEnvConfig:
 
 toplValhallaNetworkConfig: 
   network: valhalla
-  bifrostUrl: https://vertx.topl.services/valhalla/63dbff415ef2c40011c59120
+  bifrostUrl: https://vertx.topl.services/valhalla/63ed2dbf5ef2c40011c59cf2
 
 
 toplClusterNetworkConfig: 

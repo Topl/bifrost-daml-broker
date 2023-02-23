@@ -42,7 +42,7 @@ spec:
           - "-w"
           - "$(TOPL_KEYFILE_PASSWORD)"
           - "-a"
-          - "$(TOPL_API_KEY))"
+          - "$(TOPL_API_KEY)"
         env:
           - name: NETWORK
             valueFrom:
