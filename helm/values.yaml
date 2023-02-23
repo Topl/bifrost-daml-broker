@@ -27,7 +27,10 @@ toplClusterNetworkConfig:
   network: private
   bifrostUrl: http://localhost:9085
 
-  
+resources:
+  limits:
+    cpu: "2"
+    memory: "1024Mi"  
 
 image:
   name: toplprotocol/bifrost-daml-broker

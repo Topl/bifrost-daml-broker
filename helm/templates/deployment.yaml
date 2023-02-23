@@ -43,6 +43,10 @@ spec:
           - "$(TOPL_KEYFILE_PASSWORD)"
           - "-a"
           - "$(TOPL_API_KEY)"
+        resources:
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
         env:
           - name: NETWORK
             valueFrom:
