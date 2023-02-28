@@ -41,6 +41,12 @@ spec:
           - "$(IS_DAML_HUB)"
           - "-w"
           - "$(TOPL_KEYFILE_PASSWORD)"
+          - "-a"
+          - "$(TOPL_API_KEY)"
+        resources:
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
         env:
           - name: NETWORK
             valueFrom:
@@ -82,6 +88,11 @@ spec:
               secretKeyRef:
                 name: {{ include "bifrost.daml.broker.secret.name" . }}
                 key: daml-party
+          - name: TOPL_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "bifrost.daml.broker.secret.name" . }}
+                key: topl-api-key
           - name: TOPL_KEYFILE
             value: /broker/keyfile.json
           - name: TOPL_KEYFILE_PASSWORD

@@ -26,6 +26,8 @@ def fallbackVersion(d: java.util.Date): String = s"HEAD-${sbtdynver.DynVer times
 
 scalacOptions += "-Ywarn-unused"
 
+resolvers += Resolver.mavenLocal
+
 semanticdbEnabled := true
 
 semanticdbVersion := scalafixSemanticdb.revision
@@ -63,7 +65,6 @@ lazy val root = (project in file("."))
     libraryDependencies += brambl,
     libraryDependencies += bramblCommon,
     libraryDependencies += toplDaml,
-    libraryDependencies += slf4j,
     libraryDependencies += scopt,
     libraryDependencies += munit,
     libraryDependencies += fs2Core,
