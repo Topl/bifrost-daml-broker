@@ -6,3 +6,5 @@ keyfile.json
 .vscode/
 .bloop/
 target/
+secrets.yaml
+*.json
